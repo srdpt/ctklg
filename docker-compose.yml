@@ -1,0 +1,8 @@
+version: "3"
+services:
+  services:
+    build: services/.
+  www:
+    build: www/.
+    ports:
+      - "3000:3000"

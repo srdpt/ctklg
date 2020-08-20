@@ -1,0 +1,19 @@
+{
+  "name": "ctklg-services",
+  "version": "0.1.0",
+  "description": "City insights & data collected from open source cronjob-powered widgets",
+  "repository": "https://github.com/qu4k/ctklg.git",
+  "author": "Filippo Rossi",
+  "license": "AGPL-3.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "gen": "cross-env DEBUG=* node scripts/ecosystem-gen.js"
+  },
+  "dependencies": {
+    "axios": "^0.20.0",
+    "cross-env": "^7.0.2",
+    "debug": "^4.1.1",
+    "yaml": "^1.10.0"
+  }
+}

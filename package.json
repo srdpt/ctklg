@@ -1,0 +1,25 @@
+{
+  "name": "ctklg",
+  "version": "0.1.0",
+  "description": "City insights & data collected from open source cronjob-powered widgets",
+  "repository": "https://github.com/qu4k/ctklg.git",
+  "author": "Filippo Rossi",
+  "license": "AGPL-3.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "fmt": "prettier --write .",
+    "lint": "eslint . && prettier --check ."
+  },
+  "devDependencies": {
+    "eslint": "^7.7.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.20.6",
+    "eslint-plugin-standard": "^4.0.1",
+    "prettier": "2.0.5"
+  }
+}
