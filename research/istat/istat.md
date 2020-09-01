@@ -14,7 +14,7 @@ by a short id following the `XX+_YYY+` format.
 #### 22_289 Resident population on 1st January
 
 ```bash
-curl --location --request GET 'http://sdmx.istat.it/SDMXWS/rest/data/22_289/A..ITD35..../' \ 
+curl 'http://sdmx.istat.it/SDMXWS/rest/data/22_289/A..ITD35..../' \
 --header 'Accept: application/json'
 ```
 

@@ -1,19 +1,28 @@
 {
-  "name": "ctklg-services",
+  "name": "ctklg_services",
   "version": "0.1.0",
   "description": "City insights & data collected from open source cronjob-powered widgets",
   "repository": "https://github.com/qu4k/ctklg.git",
   "author": "Filippo Rossi",
   "license": "AGPL-3.0",
   "private": true,
-  "type": "module",
   "scripts": {
-    "gen": "cross-env DEBUG=* node scripts/ecosystem-gen.js"
+    "build": "rimraf lib/* && tsc"
+  },
+  "devDependencies": {
+    "@prisma/cli": "2.5.1",
+    "@prisma/client": "2.5.1",
+    "@types/cheerio": "^0.22.21",
+    "@types/cron": "^1.7.2",
+    "@types/node": "^14.6.1",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.0.2"
   },
   "dependencies": {
     "axios": "^0.20.0",
-    "cross-env": "^7.0.2",
-    "debug": "^4.1.1",
-    "yaml": "^1.10.0"
+    "cheerio": "^1.0.0-rc.3",
+    "cron": "^1.8.2",
+    "dotenv": "^8.2.0",
+    "winston": "^3.3.3"
   }
 }

@@ -6,7 +6,6 @@
   "author": "Filippo Rossi",
   "license": "AGPL-3.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "fmt": "prettier --write .",
     "lint": "eslint . && prettier --check ."
@@ -21,5 +20,9 @@
     "eslint-plugin-react": "^7.20.6",
     "eslint-plugin-standard": "^4.0.1",
     "prettier": "2.0.5"
+  },
+  "dependencies": {
+    "axios": "^0.20.0",
+    "cheerio": "^1.0.0-rc.3"
   }
 }
