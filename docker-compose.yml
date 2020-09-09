@@ -2,7 +2,6 @@ version: "3"
 services:
   services:
     build: services/.
-    env_file: services/.env
   www:
     build: www/.
     ports:

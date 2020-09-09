@@ -6,3 +6,9 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model census_snapshot {
+  id      Int      @default(autoincrement()) @id
+  created DateTime @default(now())
+  data    Json
+}

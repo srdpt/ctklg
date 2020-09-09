@@ -1,18 +1,22 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+dotenv.config({ path: "prisma/.env" });
 
 import { CronJob } from "cron";
 import winston, { Logger } from "winston";
 
 export { Logger } from "winston";
 
+import { PrismaClient } from "@prisma/client";
+
 interface Widget {
   name: string;
   cron: string;
-  setup: (logger: Logger) => Promise<void> | void;
-  run: (logger: Logger) => Promise<void> | void;
+  setup: (prisma: PrismaClient, logger: Logger) => Promise<void> | void;
+  run: (prisma: PrismaClient, logger: Logger) => Promise<void> | void;
 }
 
 export default function start(widget: Widget) {
+  const prisma = new PrismaClient();
   const logger = winston.createLogger({
     format: winston.format.combine(
       winston.format.label({ label: widget.name }),
@@ -32,7 +36,7 @@ export default function start(widget: Widget) {
     ],
   });
   logger.info("initializing widget");
-  const res = widget.setup(logger);
+  const res = widget.setup(prisma, logger);
   if (typeof res === "object") {
     res.then(() => start());
   } else {
@@ -44,7 +48,7 @@ export default function start(widget: Widget) {
       widget.cron,
       () => {
         logger.info("running widget");
-        widget.run(logger);
+        widget.run(prisma, logger);
       },
       null,
       undefined,

@@ -1,23 +1,25 @@
 import axios from "axios";
 import cheerio from "cheerio";
 
+import { PrismaClient, JsonObject } from "@prisma/client";
+
 import start, { Logger } from "../widget";
 
-interface Dataframe {
+interface Filter extends JsonObject {
+  from: number;
+  to: number;
+}
+
+interface Dataframe extends JsonObject {
   m: number;
   f: number;
   tot: number;
   fil?: Filter;
 }
 
-interface Data {
+interface Data extends JsonObject {
   total: Dataframe;
   ranged?: Dataframe[];
-}
-
-interface Filter {
-  from: number;
-  to: number;
 }
 
 function url(filter?: Filter) {
@@ -64,7 +66,8 @@ function getFilters(): Filter[] {
 start({
   cron: "0 0 1 * * *", // every day at 1:00am
   name: "census",
-  async setup(logger: Logger): Promise<void> {
+  async setup(prisma: PrismaClient, logger: Logger): Promise<void> {},
+  async run(prisma: PrismaClient, logger: Logger): Promise<void> {
     const filters = getFilters();
 
     const total = await fetchPopulation();
@@ -86,7 +89,10 @@ start({
       ranged,
     };
 
-    logger.info("population:", { data: data });
+    await prisma.census_snapshot.create({
+      data: {
+        data: data
+      }
+    })
   },
-  async run(logger): Promise<void> {},
 });
