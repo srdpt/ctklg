@@ -91,8 +91,8 @@ start({
 
     await prisma.census_snapshot.create({
       data: {
-        data: data
-      }
-    })
+        data: data,
+      },
+    });
   },
 });

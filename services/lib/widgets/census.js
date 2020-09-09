@@ -49,7 +49,8 @@ function getFilters() {
 widget_1.default({
   cron: "0 0 1 * * *",
   name: "census",
-  async setup(logger) {
+  async setup(prisma, logger) {},
+  async run(prisma, logger) {
     const filters = getFilters();
     const total = await fetchPopulation();
     const requests = [];
@@ -66,7 +67,10 @@ widget_1.default({
       total,
       ranged,
     };
-    logger.info("population:", { data: data });
+    await prisma.census_snapshot.create({
+      data: {
+        data: data,
+      },
+    });
   },
-  async run(logger) {},
 });

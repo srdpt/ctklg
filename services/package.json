@@ -7,7 +7,9 @@
   "license": "AGPL-3.0",
   "private": true,
   "scripts": {
-    "build": "rimraf lib/* && tsc"
+    "build": "rimraf lib/* && tsc",
+    "census": "yarn build && node lib/widgets/census.js",
+    "planes": "yarn build && node lib/widgets/planes.js"
   },
   "devDependencies": {
     "@prisma/cli": "^2.6.2",

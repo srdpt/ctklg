@@ -5,10 +5,14 @@ var __importDefault =
     return mod && mod.__esModule ? mod : { default: mod };
   };
 Object.defineProperty(exports, "__esModule", { value: true });
-require("dotenv/config");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config({ path: ".env" });
+dotenv_1.default.config({ path: "prisma/.env" });
 const cron_1 = require("cron");
 const winston_1 = __importDefault(require("winston"));
+const client_1 = require("@prisma/client");
 function start(widget) {
+  const prisma = new client_1.PrismaClient();
   const logger = winston_1.default.createLogger({
     format: winston_1.default.format.combine(
       winston_1.default.format.label({ label: widget.name }),
@@ -24,7 +28,7 @@ function start(widget) {
     ],
   });
   logger.info("initializing widget");
-  const res = widget.setup(logger);
+  const res = widget.setup(prisma, logger);
   if (typeof res === "object") {
     res.then(() => start());
   } else {
@@ -35,7 +39,7 @@ function start(widget) {
       widget.cron,
       () => {
         logger.info("running widget");
-        widget.run(logger);
+        widget.run(prisma, logger);
       },
       null,
       undefined,

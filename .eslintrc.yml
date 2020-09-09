@@ -14,3 +14,5 @@ parserOptions:
 plugins:
   - react
 rules: {}
+ignorePatterns:
+  - services/lib
