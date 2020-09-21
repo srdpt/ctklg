@@ -1,14 +1,13 @@
-"use strict";
-var __importDefault =
-  (this && this.__importDefault) ||
-  function (mod) {
-    return mod && mod.__esModule ? mod : { default: mod };
-  };
-Object.defineProperty(exports, "__esModule", { value: true });
-const axios_1 = __importDefault(require("axios"));
-const cheerio_1 = __importDefault(require("cheerio"));
-const widget_1 = __importDefault(require("../widget"));
-function url(filter) {
+import axios from "axios";
+import cheerio from "cheerio";
+
+import { PrismaClient } from "@prisma/client";
+
+import start, { Logger } from "./widget";
+
+import type { CensusData, CensusDataframe, CensusFilter } from "./census.types";
+
+function url(filter?: CensusFilter) {
   const URL =
     "https://portale.comune.venezia.it/millefoglie/statistiche/scheda";
   const SHEET = "QUARTIERE-POPOLA";
@@ -19,10 +18,11 @@ function url(filter) {
     return `${URL}/${SHEET}-${GEO}--------`;
   }
 }
-async function fetchPopulation(fil) {
-  const res = await axios_1.default.get(url(fil));
+
+async function fetchPopulation(fil?: CensusFilter): Promise<CensusDataframe> {
+  const res = await axios.get<string>(url(fil));
   if (res.status !== 200) throw new Error("Not 200");
-  const $ = cheerio_1.default.load(res.data);
+  const $ = cheerio.load(res.data);
   const m = parseInt(
     $("table.sticky-enabled tr:last-child td:nth-last-child(3)").text()
   );
@@ -39,34 +39,42 @@ async function fetchPopulation(fil) {
     fil,
   };
 }
-function getFilters() {
-  const filters = [];
+
+function getFilters(): CensusFilter[] {
+  const filters: CensusFilter[] = [];
   for (let i = 0; i < 110; i += 5) {
     filters.push({ from: i, to: i + 4 });
   }
   return filters;
 }
-widget_1.default({
-  cron: "0 0 1 * * *",
+
+start({
+  cron: "0 0 1 * * *", // every day at 1:00am
   name: "census",
-  async setup(prisma, logger) {},
-  async run(prisma, logger) {
+  async setup(prisma: PrismaClient, logger: Logger): Promise<void> {},
+  async run(prisma: PrismaClient, logger: Logger): Promise<void> {
     const filters = getFilters();
+
     const total = await fetchPopulation();
-    const requests = [];
+
+    const requests: Promise<CensusDataframe>[] = [];
     for (let filter of filters) {
       requests.push(fetchPopulation(filter));
     }
-    let ranged;
+
+    let ranged: CensusDataframe[] | undefined;
     try {
       ranged = await Promise.all(requests);
     } catch (err) {
       logger.warning("ranged data return error", err);
     }
-    const data = {
+
+    const data: CensusData = {
       total,
       ranged,
     };
+    logger.info("data", data);
+
     await prisma.census_snapshot.create({
       data: {
         data: data,
